@@ -1,6 +1,26 @@
 """
-EnergyConstraint contains the ReaxFF energy constraint implementation.
-This constraint calculates system energy using ReaxFF force field via LAMMPS.
+EnergyConstraint contains the ReaxFF energy constraint implementation with KOKKOS integration.
+This constraint calculates system energy using ReaxFF force field via LAMMPS with enhanced
+safety features to prevent bondchk failures and improve performance.
+
+Enhanced Features:
+- KOKKOS package integration for improved performance and safety
+- Atomic distance pre-checking to prevent bondchk failures
+- Gradual position scaling to resolve atomic overlaps
+- Enhanced error recovery mechanisms
+- Optimized neighbor list management
+
+Usage Example:
+    # Basic usage (same as before)
+    constraint = EnergyConstraint("ffield.reax", "control.reax")
+    
+    # With custom KOKKOS safety settings
+    constraint = EnergyConstraint("ffield.reax", "control.reax")
+    constraint.configure_kokkos_safety(min_bond_distance=0.6, max_scaling_steps=10)
+    
+    # Check KOKKOS status
+    status = constraint.get_kokkos_status()
+    print(f"KOKKOS enabled: {status['kokkos_enabled']}")
 """
 
 # Standard libraries imports
@@ -60,6 +80,7 @@ class KokkosReaxFFWrapper:
     - Gradual scaling mechanism to avoid sudden energy jumps
     - Enhanced error recovery with KOKKOS memory management
     - Performance optimizations using KOKKOS parallel computing
+    - Performance monitoring and statistics
     """
     
     def __init__(self, lammps_instance):
@@ -69,6 +90,15 @@ class KokkosReaxFFWrapper:
         self.min_bond_distance = 0.5  # Minimum allowed bond distance in Angstroms
         self.scaling_factor = 0.8     # Factor for gradual position scaling
         self.max_scaling_steps = 5    # Maximum scaling attempts
+        
+        # Performance monitoring
+        self.stats = {
+            'total_computations': 0,
+            'overlap_detections': 0,
+            'scaling_successes': 0,
+            'scaling_failures': 0,
+            'error_recoveries': 0
+        }
         
     def enable_kokkos(self, device='cpu', threads=None):
         """Enable KOKKOS with specified device and thread configuration."""
@@ -197,15 +227,21 @@ class KokkosReaxFFWrapper:
             tuple: (success, energy, final_positions, error_message)
         """
         try:
+            self.stats['total_computations'] += 1
+            
             # Step 1: Pre-check atomic distances
             is_safe, close_pairs = self.check_atomic_distances(positions, elements)
             
             if not is_safe:
+                self.stats['overlap_detections'] += 1
                 LOGGER.warning(f"Found {len(close_pairs)} close atomic pairs, applying gradual scaling")
                 scaled_positions, scaling_success = self.apply_gradual_scaling(positions, elements, box_lengths)
                 
                 if not scaling_success:
+                    self.stats['scaling_failures'] += 1
                     return False, None, positions, "Failed to resolve atomic overlaps through scaling"
+                else:
+                    self.stats['scaling_successes'] += 1
                 
                 # Use scaled positions for computation
                 computation_positions = scaled_positions
@@ -220,6 +256,28 @@ class KokkosReaxFFWrapper:
             error_msg = f"Safe ReaxFF pre-computation failed: {str(e)}"
             LOGGER.error(error_msg)
             return False, None, positions, error_msg
+    
+    def get_performance_stats(self):
+        """Get performance statistics for monitoring."""
+        if self.stats['total_computations'] > 0:
+            overlap_rate = self.stats['overlap_detections'] / self.stats['total_computations'] * 100
+            success_rate = self.stats['scaling_successes'] / max(1, self.stats['overlap_detections']) * 100
+        else:
+            overlap_rate = 0.0
+            success_rate = 0.0
+            
+        return {
+            'total_computations': self.stats['total_computations'],
+            'overlap_detection_rate': f"{overlap_rate:.1f}%",
+            'scaling_success_rate': f"{success_rate:.1f}%",
+            'error_recoveries': self.stats['error_recoveries'],
+            'detailed_stats': self.stats.copy()
+        }
+    
+    def reset_stats(self):
+        """Reset performance statistics."""
+        for key in self.stats:
+            self.stats[key] = 0
 
 class EnergyConstraint(Constraint):
     """
@@ -504,6 +562,11 @@ class EnergyConstraint(Constraint):
                 error_str = str(reaxff_error)
                 if "bondchk failed" in error_str or "malformed" in error_str:
                     LOGGER.warning("ReaxFF bondchk error detected, attempting recovery")
+                    
+                    # Track error recovery attempts
+                    if self.__kokkos_wrapper:
+                        self.__kokkos_wrapper.stats['error_recoveries'] += 1
+                    
                     # Apply more conservative neighbor settings
                     lmp.command("neighbor 4.0 bin")
                     lmp.command("neigh_modify every 1 delay 0 check yes page 200000")
@@ -689,6 +752,68 @@ class EnergyConstraint(Constraint):
         """Set force computation flag."""
         assert isinstance(compute_forces, bool)
         self.__compute_forces = compute_forces
+    
+    def configure_kokkos_safety(self, min_bond_distance=0.5, scaling_factor=0.8, max_scaling_steps=5):
+        """
+        Configure KOKKOS safety parameters.
+        
+        Parameters:
+            min_bond_distance (float): Minimum allowed bond distance in Angstroms
+            scaling_factor (float): Factor for gradual position scaling (0.1-1.0)
+            max_scaling_steps (int): Maximum number of scaling attempts
+        """
+        if self.__kokkos_wrapper is not None:
+            self.__kokkos_wrapper.min_bond_distance = max(0.1, min_bond_distance)
+            self.__kokkos_wrapper.scaling_factor = max(0.1, min(1.0, scaling_factor))
+            self.__kokkos_wrapper.max_scaling_steps = max(1, max_scaling_steps)
+            LOGGER.info(f"KOKKOS safety configured: min_dist={min_bond_distance}, "
+                       f"scaling={scaling_factor}, max_steps={max_scaling_steps}")
+        else:
+            LOGGER.warning("KOKKOS wrapper not initialized, safety configuration deferred")
+    
+    def get_kokkos_status(self):
+        """
+        Get current KOKKOS status and configuration.
+        
+        Returns:
+            dict: KOKKOS status information
+        """
+        status = {
+            'kokkos_available': KOKKOS_AVAILABLE,
+            'kokkos_enabled': False,
+            'wrapper_initialized': self.__kokkos_wrapper is not None,
+            'safety_config': None
+        }
+        
+        if self.__kokkos_wrapper is not None:
+            status['kokkos_enabled'] = self.__kokkos_wrapper.kokkos_enabled
+            status['safety_config'] = {
+                'min_bond_distance': self.__kokkos_wrapper.min_bond_distance,
+                'scaling_factor': self.__kokkos_wrapper.scaling_factor,
+                'max_scaling_steps': self.__kokkos_wrapper.max_scaling_steps
+            }
+        
+        return status
+    
+    def get_performance_stats(self):
+        """
+        Get performance statistics from KOKKOS wrapper.
+        
+        Returns:
+            dict: Performance statistics or None if wrapper not available
+        """
+        if self.__kokkos_wrapper is not None:
+            return self.__kokkos_wrapper.get_performance_stats()
+        else:
+            return None
+    
+    def reset_performance_stats(self):
+        """Reset performance statistics."""
+        if self.__kokkos_wrapper is not None:
+            self.__kokkos_wrapper.reset_stats()
+            LOGGER.info("Performance statistics reset")
+        else:
+            LOGGER.warning("KOKKOS wrapper not available for stats reset")
 
     def compute_before_move(self, realIndexes, relativeIndexes):
         """
