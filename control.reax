@@ -1,0 +1,47 @@
+Reaxff control parameters for KOKKOS optimization
+
+# Simulation control
+simulation_name          kokkos_reaxff_simulation
+ensemble                 0        # NVE ensemble
+nsteps                   0        # Single point calculation
+dt                       0.25     # Time step (fs)
+procByVol                no       # Process by volume
+tabulate_long_range      0        # Long range tabulation
+
+# Output control  
+freq_output              1000     # Output frequency
+write_freq               0        # Write frequency
+traj_title               ReaxFF_KOKKOS
+atom_info                1        # Atom information output
+bond_info                1        # Bond information output
+angle_info               0        # Angle information output
+
+# ReaxFF parameters
+cutoff_reaxff            10.0     # ReaxFF cutoff distance
+tabulate_bond_order      0        # Bond order tabulation
+remove_cov_bonds         0        # Remove covalent bonds
+safezone                 30       # Enhanced safezone for KOKKOS
+mincap                   1000     # Enhanced minimum capacity
+
+# Energy calculation
+energy_unit              kcal/mol # Energy units
+temp_init                300.0    # Initial temperature
+temp_final               300.0    # Final temperature
+
+# Charge equilibration
+do_qeq                   1        # Enable QEq
+qeq_freq                 1        # QEq frequency
+q_err                    1e-6     # QEq convergence criterion
+refactor                 100      # QEq refactoring frequency
+
+# Optimization settings
+minimize                 1        # Enable minimization
+minimize_style           cg       # Conjugate gradient
+minimize_tol             1e-4     # Minimization tolerance
+minimize_maxiter         1000     # Maximum minimization iterations
+
+# KOKKOS specific settings
+kokkos_newton            on       # KOKKOS Newton's law
+kokkos_neigh             half     # KOKKOS neighbor style
+kokkos_binsize           2.8      # KOKKOS bin size
+kokkos_comm              device   # KOKKOS communication
