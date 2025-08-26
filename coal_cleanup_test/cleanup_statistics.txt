@@ -1,0 +1,40 @@
+Structure Cleanup Statistics Report
+==================================================
+
+BEFORE/AFTER COMPARISON:
+------------------------------
+h_h_bonds: 6 -> 0 (change: -6)
+c_c_bonds: 3 -> 3 (change: 0)
+c_h_bonds: 8 -> 6 (change: -2)
+o_o_bonds: 1 -> 1 (change: 0)
+avg_c_c_distance: 1.8 -> 1.8396157222766452 (change: 0.039615722276645116)
+avg_c_h_distance: 1.177807099184474 -> 1.1658884306440414 (change: -0.011918668540432664)
+
+FINAL STATISTICS:
+--------------------
+total_atoms: 20
+C_atoms: 6
+H_atoms: 10
+O_atoms: 2
+N_atoms: 1
+S_atoms: 1
+h_h_bonds: 0
+c_c_bonds: 3
+c_h_bonds: 6
+o_o_bonds: 1
+avg_c_c_distance: 1.8396157222766452
+std_c_c_distance: 0.04874780145506952
+avg_c_h_distance: 1.1658884306440414
+std_c_h_distance: 0.06973747252817886
+distance_violations: 2
+coordination_violations: 23
+angle_violations: 0
+current_cycle: 9
+temperature: 0.19
+
+TARGET VALIDATION:
+--------------------
+H-H bonds: 0 (target: ≤5) - PASS
+C-C distance: 1.840 (target: 1.54±0.1) - FAIL
+C-H distance: 1.166 (target: 1.09±0.1) - PASS
+O-O bonds: 1 (target: ≤2) - PASS
