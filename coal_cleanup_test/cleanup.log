@@ -1,0 +1,100 @@
+2025-08-26 03:56:22,683 - root - INFO - ============================================================
+2025-08-26 03:56:22,683 - root - INFO - STRUCTURE CLEANUP STARTED
+2025-08-26 03:56:22,683 - root - INFO - ============================================================
+2025-08-26 03:56:22,683 - root - INFO - Validating input file...
+2025-08-26 03:56:22,683 - root - INFO - Input file validation passed: test_coal_structure.pdb
+2025-08-26 03:56:22,683 - root - INFO - Performing initial structure analysis...
+2025-08-26 03:56:22,684 - root - INFO - Structure contains 20 atoms:
+2025-08-26 03:56:22,684 - root - INFO -   C: 6 atoms
+2025-08-26 03:56:22,684 - root - INFO -   H: 10 atoms
+2025-08-26 03:56:22,684 - root - INFO -   N: 1 atoms
+2025-08-26 03:56:22,684 - root - INFO -   O: 2 atoms
+2025-08-26 03:56:22,684 - root - INFO -   S: 1 atoms
+2025-08-26 03:56:22,684 - root - INFO - Engine directory: coal_cleanup_test/cleanup_engine
+2025-08-26 03:56:22,684 - root - INFO - Initializing cleanup engine...
+2025-08-26 03:56:22,684 - CleanupEngine - INFO - CleanupEngine initialized with path: coal_cleanup_test/cleanup_engine
+2025-08-26 03:56:22,684 - CleanupEngine - INFO - Initial temperature: 1.0
+2025-08-26 03:56:22,684 - root - INFO - Starting structure cleanup process...
+2025-08-26 03:56:22,684 - CleanupEngine - INFO - Starting structure cleanup for test_coal_structure.pdb
+2025-08-26 03:56:22,684 - CleanupEngine - INFO - Maximum cycles: 10
+2025-08-26 03:56:22,684 - CleanupEngine - INFO - Loading structure from test_coal_structure.pdb
+2025-08-26 03:56:22,685 - CleanupEngine - INFO - Loaded 20 atoms
+2025-08-26 03:56:22,685 - CleanupEngine - INFO - Loaded structure with 20 atoms
+2025-08-26 03:56:22,685 - CleanupEngine - INFO - Setting up geometric constraints for cleanup...
+2025-08-26 03:56:22,685 - CleanupEngine - INFO - Setup 10 distance constraints
+2025-08-26 03:56:22,685 - CleanupEngine - INFO - Setup 17 coordination constraints
+2025-08-26 03:56:22,685 - CleanupEngine - INFO - Setting up move generators...
+2025-08-26 03:56:22,685 - CleanupEngine - INFO - Move generators configured
+2025-08-26 03:56:22,886 - CleanupEngine - INFO - Initial statistics:
+2025-08-26 03:56:22,886 - CleanupEngine - INFO -   H-H bonds: 6
+2025-08-26 03:56:22,886 - CleanupEngine - INFO -   C-C bonds: 3
+2025-08-26 03:56:22,886 - CleanupEngine - INFO -   C-H bonds: 8
+2025-08-26 03:56:22,886 - CleanupEngine - INFO -   O-O bonds: 1
+2025-08-26 03:56:22,886 - CleanupEngine - INFO -   Avg C-C dist: 1.800
+2025-08-26 03:56:22,886 - CleanupEngine - INFO -   Avg C-H dist: 1.178
+2025-08-26 03:56:22,887 - CleanupEngine - INFO -   Temperature: 1.000
+2025-08-26 03:56:22,887 - CleanupEngine - INFO - Applying geometric corrections...
+2025-08-26 03:56:22,887 - CleanupEngine - INFO - Made 6 distance corrections
+2025-08-26 03:56:22,887 - CleanupEngine - INFO - Coordination corrections applied (placeholder)
+2025-08-26 03:56:22,887 - CleanupEngine - INFO - Geometric corrections applied
+2025-08-26 03:56:22,889 - CleanupEngine - INFO - Cycle 0 statistics:
+2025-08-26 03:56:22,889 - CleanupEngine - INFO -   H-H bonds: 3
+2025-08-26 03:56:22,889 - CleanupEngine - INFO -   C-C bonds: 3
+2025-08-26 03:56:22,889 - CleanupEngine - INFO -   C-H bonds: 6
+2025-08-26 03:56:22,889 - CleanupEngine - INFO -   O-O bonds: 1
+2025-08-26 03:56:22,890 - CleanupEngine - INFO -   Avg C-C dist: 1.800
+2025-08-26 03:56:22,890 - CleanupEngine - INFO -   Avg C-H dist: 1.227
+2025-08-26 03:56:22,890 - CleanupEngine - INFO -   Temperature: 1.000
+2025-08-26 03:56:22,890 - CleanupEngine - INFO - Saving structure to coal_cleanup_test/intermediate_cycle_0.pdb
+2025-08-26 03:56:22,890 - CleanupEngine - INFO - Structure saved with 20 atoms
+2025-08-26 03:56:22,890 - CleanupEngine - INFO - Applying geometric corrections...
+2025-08-26 03:56:22,891 - CleanupEngine - INFO - Made 3 distance corrections
+2025-08-26 03:56:22,891 - CleanupEngine - INFO - Coordination corrections applied (placeholder)
+2025-08-26 03:56:22,891 - CleanupEngine - INFO - Geometric corrections applied
+2025-08-26 03:56:22,891 - CleanupEngine - INFO - Applying geometric corrections...
+2025-08-26 03:56:22,892 - CleanupEngine - INFO - Made 2 distance corrections
+2025-08-26 03:56:22,892 - CleanupEngine - INFO - Coordination corrections applied (placeholder)
+2025-08-26 03:56:22,892 - CleanupEngine - INFO - Geometric corrections applied
+2025-08-26 03:56:22,892 - CleanupEngine - INFO - Applying geometric corrections...
+2025-08-26 03:56:22,892 - CleanupEngine - INFO - Made 3 distance corrections
+2025-08-26 03:56:22,893 - CleanupEngine - INFO - Coordination corrections applied (placeholder)
+2025-08-26 03:56:22,893 - CleanupEngine - INFO - Geometric corrections applied
+2025-08-26 03:56:22,893 - CleanupEngine - INFO - Applying geometric corrections...
+2025-08-26 03:56:22,893 - CleanupEngine - INFO - Made 1 distance corrections
+2025-08-26 03:56:22,893 - CleanupEngine - INFO - Coordination corrections applied (placeholder)
+2025-08-26 03:56:22,893 - CleanupEngine - INFO - Geometric corrections applied
+2025-08-26 03:56:22,894 - CleanupEngine - INFO - Applying geometric corrections...
+2025-08-26 03:56:22,894 - CleanupEngine - INFO - Made 0 distance corrections
+2025-08-26 03:56:22,894 - CleanupEngine - INFO - Coordination corrections applied (placeholder)
+2025-08-26 03:56:22,894 - CleanupEngine - INFO - Geometric corrections applied
+2025-08-26 03:56:22,895 - CleanupEngine - INFO - Applying geometric corrections...
+2025-08-26 03:56:22,895 - CleanupEngine - INFO - Made 0 distance corrections
+2025-08-26 03:56:22,895 - CleanupEngine - INFO - Coordination corrections applied (placeholder)
+2025-08-26 03:56:22,895 - CleanupEngine - INFO - Geometric corrections applied
+2025-08-26 03:56:22,895 - CleanupEngine - INFO - Applying geometric corrections...
+2025-08-26 03:56:22,896 - CleanupEngine - INFO - Made 0 distance corrections
+2025-08-26 03:56:22,896 - CleanupEngine - INFO - Coordination corrections applied (placeholder)
+2025-08-26 03:56:22,896 - CleanupEngine - INFO - Geometric corrections applied
+2025-08-26 03:56:22,896 - CleanupEngine - INFO - Applying geometric corrections...
+2025-08-26 03:56:22,897 - CleanupEngine - INFO - Made 0 distance corrections
+2025-08-26 03:56:22,897 - CleanupEngine - INFO - Coordination corrections applied (placeholder)
+2025-08-26 03:56:22,897 - CleanupEngine - INFO - Geometric corrections applied
+2025-08-26 03:56:22,897 - CleanupEngine - INFO - Applying geometric corrections...
+2025-08-26 03:56:22,897 - CleanupEngine - INFO - Made 2 distance corrections
+2025-08-26 03:56:22,897 - CleanupEngine - INFO - Coordination corrections applied (placeholder)
+2025-08-26 03:56:22,898 - CleanupEngine - INFO - Geometric corrections applied
+2025-08-26 03:56:22,898 - CleanupEngine - INFO - Saving structure to coal_cleanup_test/cleaned_structure.pdb
+2025-08-26 03:56:22,898 - CleanupEngine - INFO - Structure saved with 20 atoms
+2025-08-26 03:56:22,898 - CleanupEngine - INFO - Generating final cleanup report...
+2025-08-26 03:56:23,948 - matplotlib.font_manager - INFO - Failed to extract font properties from /usr/share/fonts/truetype/noto/NotoColorEmoji.ttf: Can not load face (unknown file format; error code 0x2)
+2025-08-26 03:56:24,665 - matplotlib.font_manager - INFO - generated new fontManager
+2025-08-26 03:56:25,685 - CleanupEngine - INFO - Progress curves saved to coal_cleanup_test/cleanup_progress.png
+2025-08-26 03:56:25,686 - CleanupEngine - INFO - Structure cleanup completed successfully
+2025-08-26 03:56:25,686 - root - INFO - ============================================================
+2025-08-26 03:56:25,686 - root - INFO - STRUCTURE CLEANUP COMPLETED
+2025-08-26 03:56:25,686 - root - INFO - ============================================================
+2025-08-26 03:56:25,686 - root - INFO - Total time: 3.0 seconds
+2025-08-26 03:56:25,686 - root - INFO - Cycles completed: 10
+2025-08-26 03:56:25,686 - root - INFO - Output structure: coal_cleanup_test/cleaned_structure.pdb
+2025-08-26 03:56:25,686 - root - INFO - Statistics report: coal_cleanup_test/cleanup_statistics.txt
+2025-08-26 03:56:25,686 - root - INFO - Full log: coal_cleanup_test/cleanup.log
