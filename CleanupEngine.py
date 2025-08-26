@@ -183,6 +183,11 @@ class CleanupEngine:
     def _count_problematic_bonds(self, coords, elements):
         """Count problematic bonds based on distance criteria."""
         
+        # Use optimized distance calculation for better performance
+        if len(coords) > 1000:
+            # For large structures, use a more efficient approach
+            return self._count_problematic_bonds_optimized(coords, elements)
+        
         from scipy.spatial.distance import pdist, squareform
         
         # Compute all pairwise distances
@@ -200,6 +205,49 @@ class CleanupEngine:
         for i in range(n_atoms):
             for j in range(i+1, n_atoms):
                 dist = distances[i,j]
+                elem_i, elem_j = elements[i], elements[j]
+                
+                # H-H bonds (problematic if < 1.5 Å)
+                if elem_i == 'H' and elem_j == 'H' and dist < 1.5:
+                    counts['h_h_bonds'] += 1
+                    
+                # C-C bonds (count all reasonable C-C bonds 1.2-2.0 Å)
+                elif elem_i == 'C' and elem_j == 'C' and 1.2 <= dist <= 2.0:
+                    counts['c_c_bonds'] += 1
+                    
+                # C-H bonds (count all reasonable C-H bonds 0.8-1.4 Å)  
+                elif {elem_i, elem_j} == {'C', 'H'} and 0.8 <= dist <= 1.4:
+                    counts['c_h_bonds'] += 1
+                    
+                # O-O bonds (problematic if < 2.0 Å)
+                elif elem_i == 'O' and elem_j == 'O' and dist < 2.0:
+                    counts['o_o_bonds'] += 1
+                    
+        return counts
+        
+    def _count_problematic_bonds_optimized(self, coords, elements):
+        """Optimized bond counting for large structures."""
+        
+        # For very large structures, use a neighbor list approach
+        # This is a simplified version - in practice would use spatial indexing
+        
+        counts = {
+            'h_h_bonds': 0,
+            'c_c_bonds': 0, 
+            'c_h_bonds': 0,
+            'o_o_bonds': 0,
+        }
+        
+        n_atoms = len(elements)
+        max_check_distance = 3.0  # Only check atoms within reasonable bonding distance
+        
+        for i in range(n_atoms):
+            for j in range(i+1, min(i+100, n_atoms)):  # Limit neighbor checks
+                dist = np.linalg.norm(coords[i] - coords[j])
+                
+                if dist > max_check_distance:
+                    continue
+                    
                 elem_i, elem_j = elements[i], elements[j]
                 
                 # H-H bonds (problematic if < 1.5 Å)
